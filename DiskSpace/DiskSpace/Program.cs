@@ -32,6 +32,7 @@ namespace DiskSpace
         {
             Console.WindowHeight = 30;
             Console.WindowWidth = 70;
+
             Console.Title = "Home Monitoring";
             Console.CursorVisible = false;
             Start();
@@ -48,6 +49,7 @@ namespace DiskSpace
                     //    Thread.Sleep(100);
                     //    progressBar.StepForward();
                     //}
+
                 }
                 Console.CursorLeft = 0;
                 Console.Write("Getting Information...");
@@ -104,11 +106,9 @@ namespace DiskSpace
 
         public static void Start()
         {
-
             Console.CursorTop = 0;
             Console.CursorLeft = 0;
             Console.Write(new string(' ', Console.WindowWidth));
-            Console.CursorTop = 0;
             Console.CursorLeft = 0;
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write("Home Monitoring   ");
@@ -121,6 +121,7 @@ namespace DiskSpace
         public static void CheckDiskSize()
         {
             Console.CursorTop = 9;
+            Console.CursorLeft = 0;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Disk Space List:");
             DriveInfo[] Drives = DriveInfo.GetDrives(); // alle Laufwerke auslesen
@@ -491,6 +492,7 @@ namespace DiskSpace
                 int ram = Convert.ToInt32(ramCounter.NextValue());
 
                 Console.CursorTop = 5;
+                Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Performace Workload:");
 
@@ -512,7 +514,7 @@ namespace DiskSpace
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("\tUsage: ");
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write($"{ram}%\n");
+                    Console.Write($"{ram}%");
                 }
                 else
                 {
@@ -521,12 +523,14 @@ namespace DiskSpace
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("\tUsage: ");
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write($"{ram}%\n");
+                    Console.Write($"{ram}%");
                 }
             }
             catch
             {
                 //RAM
+                Console.CursorTop = 6;
+                Console.CursorLeft = 0;
                 Console.Write(new string(' ', Console.WindowWidth));
                 Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -540,12 +544,14 @@ namespace DiskSpace
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("\tUsage: ");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write($"---\n");
+                Console.Write($"---");
             }
 
             try
             {
                 //CPU
+                Console.CursorTop = 7;
+                Console.CursorLeft = 0;
                 int cpu = Convert.ToInt32(cpuCounter.NextValue());
                 Console.Write(new string(' ', Console.WindowWidth));
                 Console.CursorLeft = 0;
@@ -577,6 +583,8 @@ namespace DiskSpace
             catch
             {
                 //CPU
+                Console.CursorTop = 7;
+                Console.CursorLeft = 0;
                 Console.Write(new string(' ', Console.WindowWidth));
                 Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -590,7 +598,7 @@ namespace DiskSpace
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("\tUsage: ");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write($"---\n");
+                Console.Write($"---");
             }
 
             
