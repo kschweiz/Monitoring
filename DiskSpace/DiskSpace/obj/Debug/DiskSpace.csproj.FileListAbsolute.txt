@@ -26,3 +26,10 @@ C:\Users\scke\Desktop\C#\DiskSpace\DiskSpace\obj\Debug\DiskSpace.csprojResolveAs
 C:\Users\scke\Desktop\C#\DiskSpace\DiskSpace\obj\Debug\DiskSpace.csproj.CoreCompileInputs.cache
 C:\Users\scke\Desktop\C#\DiskSpace\DiskSpace\obj\Debug\DiskSpace.exe
 C:\Users\scke\Desktop\C#\DiskSpace\DiskSpace\obj\Debug\DiskSpace.pdb
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\bin\Debug\DiskSpace.exe.config
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\bin\Debug\DiskSpace.exe
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\bin\Debug\DiskSpace.pdb
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\obj\Debug\DiskSpace.csprojResolveAssemblyReference.cache
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\obj\Debug\DiskSpace.csproj.CoreCompileInputs.cache
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\obj\Debug\DiskSpace.exe
+C:\Users\scke\Documents\GitHub\Monitoring.git\DiskSpace\DiskSpace\obj\Debug\DiskSpace.pdb

@@ -15,6 +15,10 @@ namespace DiskSpace
 {
     class Program
     {
+        //UsageControl
+        public static PerformanceCounter cpuCounter = new PerformanceCounter();
+        public static PerformanceCounter ramCounter = new PerformanceCounter();
+
         //Fail / Bad / Error Counters
         private static int countFailDisk = 0;
         private static int countBadPing = 0;
@@ -50,6 +54,7 @@ namespace DiskSpace
 
 
                 Start();
+                UsageControl();
                 CheckDiskSize();
                 PingTest();
                 UpAndDownLoad();
@@ -115,12 +120,12 @@ namespace DiskSpace
 
         public static void CheckDiskSize()
         {
-            Console.CursorTop = 5;
+            Console.CursorTop = 9;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Disk Space List:");
             DriveInfo[] Drives = DriveInfo.GetDrives(); // alle Laufwerke auslesen
             countDrives = Drives.Count();
-            Console.CursorTop = 6;
+            Console.CursorTop = 10;
             Console.CursorLeft = 0;
             foreach (DriveInfo d in Drives)
             {
@@ -200,7 +205,7 @@ namespace DiskSpace
 
         public static void PingTest()
         {
-            Console.CursorTop = countDrives + 7;
+            Console.CursorTop = countDrives + 11;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Ping Test:");
 
@@ -208,11 +213,12 @@ namespace DiskSpace
             {
                 try
                 {
-                    Console.Write(new string(' ', Console.WindowWidth));
-                    Console.CursorLeft = 0;
+
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Ping ping = new Ping();
                     PingReply pr = ping.Send(list.Get(s));
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.CursorLeft = 0;
                     if (pr.Status == IPStatus.Success)
                     {
                         Console.Write($"Ping: ");
@@ -262,6 +268,8 @@ namespace DiskSpace
                 }
                 catch
                 {
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.CursorLeft = 0;
                     Console.Write($"Ping: ");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.Write(s);
@@ -282,14 +290,15 @@ namespace DiskSpace
 
         public static void UpAndDownLoad()
         {
-            Console.CursorTop = countDrives + list.Count + 9;
+            Console.CursorTop = countDrives + list.Count + 13;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Up and Download:");
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.CursorLeft = 0;
+
 
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("I/F: ");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -321,6 +330,8 @@ namespace DiskSpace
                         {
                             long up = ni.GetIPv4Statistics().BytesSent / teiler;
                             long down = ni.GetIPv4Statistics().BytesReceived / teiler;
+                            Console.Write(new string(' ', Console.WindowWidth));
+                            Console.CursorLeft = 0;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.Write("I/F: ");
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -342,6 +353,8 @@ namespace DiskSpace
                         }
                         catch
                         {
+                            Console.Write(new string(' ', Console.WindowWidth));
+                            Console.CursorLeft = 0;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.Write("I/F: ");
                             Console.ForegroundColor = ConsoleColor.Gray;
@@ -418,7 +431,7 @@ namespace DiskSpace
             try
             {
                 //momentan + zwei --> wenn mehr Up/Down dann wieder plus rechnen
-                Console.CursorTop = countDrives + list.Count + 9 + 3;
+                Console.CursorTop = countDrives + list.Count + 13 + 3;
                 Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Traffic Average:");
@@ -439,7 +452,7 @@ namespace DiskSpace
             }
             catch
             {
-                Console.CursorTop = countDrives + list.Count + 9 + 3;
+                Console.CursorTop = countDrives + list.Count + 13 + 3;
                 Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Traffic Average:");
@@ -460,6 +473,128 @@ namespace DiskSpace
 
                 countBadUpDownLoad++;
             }
+
+        }
+
+        public static void UsageControl()
+        {
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total";
+
+            ramCounter.CategoryName = "Memory";
+            ramCounter.CounterName = "% Committed Bytes in Use";
+
+            try
+            {
+
+                int ram = Convert.ToInt32(ramCounter.NextValue());
+
+                Console.CursorTop = 5;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Performace Workload:");
+
+                //RAM
+                Console.CursorTop = 6;
+                Console.CursorLeft = 0;
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorLeft = 0;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Name: ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("RAM");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tStatus: ");
+                if (ram < 70)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("OK");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\tUsage: ");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write($"{ram}%\n");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("BAD");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\tUsage: ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"{ram}%\n");
+                }
+            }
+            catch
+            {
+                //RAM
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorLeft = 0;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Name: ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("RAM");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tStatus: ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("FAILED");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tUsage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"---\n");
+            }
+
+            try
+            {
+                //CPU
+                int cpu = Convert.ToInt32(cpuCounter.NextValue());
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorLeft = 0;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Name: ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("CPU");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tStatus: ");
+                if (cpu < 70)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("OK");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\tUsage: ");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write($"{cpu}%\n");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("BAD");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\tUsage: ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"{cpu}%\n");
+                }
+            }
+            catch
+            {
+                //CPU
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.CursorLeft = 0;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Name: ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("CPU");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tStatus: ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("FAILED");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tUsage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"---\n");
+            }
+
+            
+
 
         }
     }
