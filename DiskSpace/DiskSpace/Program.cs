@@ -16,6 +16,8 @@ namespace DiskSpace
 {
     class Program
     {
+
+
         public const int CURSORPRINTTRAFFIC = 16;
         public const int CURSORCHECKUPDOWN = 13;
         public const int CURSORCHECKPING = 11;
@@ -29,10 +31,13 @@ namespace DiskSpace
 
         public static int countDrives;
         public static NameValueCollection list = ConfigurationManager.AppSettings;
+        public static long[] pingAverage = new long[list.Count];
+        public static int[] pingCounter = new int[list.Count];
+        
 
         static void Main(string[] args)
         {
-            Console.WindowHeight = 30;
+            Console.WindowHeight = 32;
             Console.WindowWidth = 70;
 
             Console.Title = "Home Monitoring";
@@ -109,7 +114,5 @@ namespace DiskSpace
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(DateTime.Now + "\n");
         }  
-
-       
     }
 }

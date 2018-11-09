@@ -17,6 +17,8 @@ namespace DiskSpace
     {
         public static void CheckPing()
         {
+            int index = 0;
+
             Console.CursorTop = Program.countDrives + Program.CURSORCHECKPING;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Ping Test:");
@@ -32,6 +34,9 @@ namespace DiskSpace
                     Console.CursorLeft = 0;
                     if (pr.Status == IPStatus.Success)
                     {
+                        Program.pingCounter[index]++;
+                        Program.pingAverage[index] += pr.RoundtripTime;
+
                         Console.Write($"Ping: ");
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write(s);
@@ -53,13 +58,17 @@ namespace DiskSpace
                         if (pr.RoundtripTime < 100)
                         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write($"{pr.RoundtripTime} ms\n");
+                            Console.Write($"{pr.RoundtripTime} ms");
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write($"{pr.RoundtripTime} ms\n");
+                            Console.Write($"{pr.RoundtripTime} ms");
                         }
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("\tAverage: ");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write($"{Program.pingAverage[index] / Program.pingCounter[index]} ms\n");
                     }
                     else
                     {
@@ -73,11 +82,21 @@ namespace DiskSpace
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("\tTime: ");
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write($"---\n");
+                        Console.Write($"---");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("\tAverage: ");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write("---\n");
                         Program.countBadPing++;
+
+                        //Reset Average at Index from array
+                        Program.pingAverage[index] = 0;
+                        Program.pingCounter[index] = 0;
                     }
+
+
                 }
-                catch
+                catch(Exception ex)
                 {
                     Console.Write(new string(' ', Console.WindowWidth));
                     Console.CursorLeft = 0;
@@ -96,6 +115,7 @@ namespace DiskSpace
                 }
 
 
+                index++;
             }
         }
     }
