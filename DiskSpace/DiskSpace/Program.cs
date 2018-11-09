@@ -131,7 +131,10 @@ namespace DiskSpace
 
                     // Keep last 20, ~2 seconds
                     reads = new[] { local }.Concat(reads).Take(20);
+                    if (true)
+                    {
 
+                    }
                     if (i % 10 == 0)
                     { // ~1 second
                         var bSec = reads.Sum() / reads.Count();
