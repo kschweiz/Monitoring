@@ -17,7 +17,7 @@ namespace DiskSpace
     {
         public static void CheckPing()
         {
-            Console.CursorTop = Program.countDrives + 11;
+            Console.CursorTop = Program.countDrives + Program.CURSORCHECKPING;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Ping Test:");
 

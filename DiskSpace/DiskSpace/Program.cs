@@ -16,6 +16,10 @@ namespace DiskSpace
 {
     class Program
     {
+        public const int CURSORPRINTTRAFFIC = 16;
+        public const int CURSORCHECKUPDOWN = 13;
+        public const int CURSORCHECKPING = 11;
+
         //Fail / Bad / Error Counters
         public static int countFailDisk = 0;
         public static int countBadPing = 0;
@@ -41,7 +45,7 @@ namespace DiskSpace
                 using (ProgressBar progressBar = new ProgressBar())
                 {
                     progressBar.MaxSteps = 100;
-                    traffic = CheckWLANUsage(progressBar);
+                    traffic = WLANUsage.CheckWLANUsage(progressBar);
                 }
                 Console.CursorLeft = 0;
                 Console.Write("Getting Information...");
@@ -51,7 +55,7 @@ namespace DiskSpace
                 DiskUsage.CheckDiskSize();
                 PingTest.CheckPing();
                 UpAndDownload.CheckUpAndDownload();
-                PrintTraffic(traffic);
+                WLANUsage.PrintTraffic(traffic);
                 StatusLine();
             }
         }
@@ -106,99 +110,6 @@ namespace DiskSpace
             Console.Write(DateTime.Now + "\n");
         }  
 
-        public static int CheckWLANUsage(ProgressBar progressBar)
-        {
-            try
-            {
-                var nics = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
-                // Select desired NIC
-                var nic = nics.Single(n => n.Name == "Ethernet");
-                var reads = Enumerable.Empty<double>();
-                var sw = new Stopwatch();
-                var lastBr = nic.GetIPv4Statistics().BytesReceived;
-
-                double kbsSum = 0;
-
-                for (var i = 0; i < 100; i++)
-                {
-                    sw.Restart();
-                    Thread.Sleep(100);
-                    var elapsed = sw.Elapsed.TotalSeconds;
-                    var br = nic.GetIPv4Statistics().BytesReceived;
-
-                    var local = (br - lastBr) / elapsed;
-                    lastBr = br;
-
-                    // Keep last 20, ~2 seconds
-                    reads = new[] { local }.Concat(reads).Take(20);
-                    if (true)
-                    {
-
-                    }
-                    if (i % 10 == 0)
-                    { // ~1 second
-                        var bSec = reads.Sum() / reads.Count();
-                        var kbs = (bSec * 8) / 1024;
-                        kbsSum += kbs;
-                    }
-
-                    progressBar.StepForward();
-                }
-                return Convert.ToInt32(kbsSum / 10);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public static void PrintTraffic(double traffic)
-        {
-            try
-            {
-                //momentan + zwei --> wenn mehr Up/Down dann wieder plus rechnen
-                Console.CursorTop = countDrives + list.Count + 13 + 3;
-                Console.CursorLeft = 0;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Traffic Average:");
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.CursorLeft = 0;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("I/F: ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write("Ethernet");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("\tStatus: ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("OK");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("\tTraffic: ");
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(traffic + " Kbps");
-            }
-            catch
-            {
-                Console.CursorTop = countDrives + list.Count + 13 + 3;
-                Console.CursorLeft = 0;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Traffic Average:");
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.CursorLeft = 0;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("I/F: ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write("Ethernet");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("\tStatus: ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("FAILED");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("\tTraffic: ");
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(traffic + "---");
-
-                countBadUpDownLoad++;
-            }
-        }
+       
     }
 }
