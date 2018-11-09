@@ -17,7 +17,7 @@ namespace DiskSpace
     {
         public static void CheckUpAndDownload()
         {
-            Console.CursorTop = Program.countDrives + Program.list.Count + 13;
+            Console.CursorTop = Program.countDrives + Program.list.Count + Program.CURSORCHECKUPDOWN;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Up and Download:");
 
