@@ -18,6 +18,10 @@ namespace DiskSpace
         //UsageControl
         public static PerformanceCounter cpuCounter = new PerformanceCounter();
         public static PerformanceCounter ramCounter = new PerformanceCounter();
+
+        public static int[] usageAverage = new int[2];
+        public static int[] usageCounter = new int[2];
+
         public static void CheckUsageControl()
         {
             cpuCounter.CategoryName = "Processor";
@@ -28,9 +32,10 @@ namespace DiskSpace
             ramCounter.CounterName = "% Committed Bytes in Use";
 
             try
-            {
-
+            {                
                 int ram = Convert.ToInt32(ramCounter.NextValue());
+                usageAverage[0] += ram;
+                usageCounter[0]++;
 
                 Console.CursorTop = 5;
                 Console.CursorLeft = 0;
@@ -66,6 +71,10 @@ namespace DiskSpace
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write($"{ram}%");
                 }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tAverage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"{usageAverage[0] / usageCounter[0]}%");
             }
             catch
             {
@@ -86,6 +95,10 @@ namespace DiskSpace
                 Console.Write("\tUsage: ");
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write($"---");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tAverage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("---");
             }
 
             try
@@ -94,6 +107,9 @@ namespace DiskSpace
                 Console.CursorTop = 7;
                 Console.CursorLeft = 0;
                 int cpu = Convert.ToInt32(cpuCounter.NextValue());
+                usageAverage[1] += cpu;
+                usageCounter[1]++;
+
                 Console.Write(new string(' ', Console.WindowWidth));
                 Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -109,7 +125,7 @@ namespace DiskSpace
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("\tUsage: ");
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write($"{cpu}%\n");
+                    Console.Write($"{cpu}%");
                 }
                 else
                 {
@@ -120,6 +136,10 @@ namespace DiskSpace
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write($"{cpu}%\n");
                 }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tAverage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"{usageAverage[1] / usageCounter[1]}%");
             }
             catch
             {
@@ -140,6 +160,10 @@ namespace DiskSpace
                 Console.Write("\tUsage: ");
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write($"---");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("\tAverage: ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("---");
             }
         }
     }
